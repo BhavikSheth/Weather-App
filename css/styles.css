@@ -1,0 +1,92 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+  padding-top: 5%;
+  background-color: #27AAE1;
+  color: white;
+  font-family: Open Sans;
+}
+
+.location {
+  font-weight: bold;
+}
+
+.date-time {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.weathericon {
+
+}
+
+.weathericon img {
+  width: 350px;
+  margin: auto;
+}
+
+.temperature {
+  transform: translateY(50%);
+}
+
+.temperature h1 {
+  font-size: 75px;
+  text-align: center;
+}
+
+.max-min {
+  text-align: center;
+}
+
+.tempspanc {
+  cursor: pointer;
+  color: red;
+}
+
+.tempspanf {
+  cursor: pointer;
+  color: red;
+}
+
+.weather-main {
+  text-align: center;
+}
+
+.rise-set {
+  text-align: center;
+  font-weight: 100;
+  margin-top: 25px;
+}
+
+.table {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#footer {
+  text-align: center;
+}
+
+#footer a {
+  color: #FFF;
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 767px) {
+  .temperature {
+    transform: translateY(0);
+  }
+  
+  .weathericon img {
+  width: 250px;
+  }
+  
+  .location, .date-time {
+    text-align: center;
+  }
+  
+  .table {
+    margin-top: 25px;
+  }
+}

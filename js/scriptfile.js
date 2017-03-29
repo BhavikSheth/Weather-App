@@ -17,7 +17,6 @@ function getGeoIP() {
 function locationSuccess(pos) {
     coords.lat = pos.coords.latitude;
     coords.lon = pos.coords.longitude;
-    console.log(coords.lat, coords.lon);
     getWeather(coords.lat, coords.lon);
     getLocationName(coords.lat, coords.lon);
 }
@@ -25,14 +24,12 @@ function locationSuccess(pos) {
 function ipLocationSuccess(ipjson) {
     coords.lat = ipjson.latitude;
     coords.lon = ipjson.longitude;
-    console.log(coords.lat, coords.lon);
     getWeather(coords.lat, coords.lon);
     getLocationName(coords.lat, coords.lon);
 }
 
 function getLocationName(lat, lon) {
     $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&key=AIzaSyB_6EPRMJ2oCIW3hd_8CzduQZl0wbPyiEk", function(googlejson) {
-        console.log(googlejson.results.filter(v=>v.types.includes("locality"))[0].formatted_address);
         $(".location").text(googlejson.results.filter(v=>v.types.includes("locality"))[0].formatted_address);
     });
 }

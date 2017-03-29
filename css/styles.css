@@ -16,40 +16,37 @@ body {
   text-align: right;
 }
 
-.weathericon {
-
-}
-
-.weathericon img {
-  width: 350px;
+.weathericon canvas {
+  padding: 20px 0;
+  width: 250px;
   margin: auto;
 }
 
-.temperature {
-  transform: translateY(50%);
+.temperatures {
+  -webkit-transform: translateY(30%);
+     -moz-transform: translateY(30%);
+      -ms-transform: translateY(30%);
+       -o-transform: translateY(30%);
+          transform: translateY(30%);
 }
 
-.temperature h1 {
+.main-temp {
   font-size: 75px;
   text-align: center;
+}
+
+.cel-fah {
+  cursor: pointer;
+  color: red;
 }
 
 .max-min {
   text-align: center;
 }
 
-.tempspanc {
-  cursor: pointer;
-  color: red;
-}
-
-.tempspanf {
-  cursor: pointer;
-  color: red;
-}
-
-.weather-main {
+.weather-title {
   text-align: center;
+  margin-top: 30px;
 }
 
 .rise-set {

@@ -1,80 +1,133 @@
-// This is one of my earliest projects and the code here is weak.
-// I choose not to come back and refactor this code because it reminds me of my journey and how far I have come. It shows that everyone was once a beginner.
+var coords = {};
+var temp = {C:{},F:{}};
+var presentUnit = "C";
 
-$("document").ready(function() {
-  $.getJSON("http://ip-api.com/json", function(locationjson) {
-    longitude = locationjson.lon;
-    latitude = locationjson.lat;
-    getWeather(longitude, latitude);
-  })
-})
-
-function getWeather(lon, lat) {
-  $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&APPID=d44cad98190cfa5e0827ddc336f22609&units=metric", function(weatherjson) {
-    $(".location").html(weatherjson.name + ", " + weatherjson.sys.country);
-    $(".temperature").html("<h1>" + Math.round(weatherjson.main.temp) + "&deg;<span class=\"tempspanc\" onClick=\"getTempC(" + weatherjson.main.temp + ", " + weatherjson.main.temp_max + ", " + weatherjson.main.temp_min + ")\">C</span></h1><h2 class=\"max-min\">" + Math.round(weatherjson.main.temp_max) + "&deg;C / " + Math.round(weatherjson.main.temp_min) + "&deg;C</h2>");
-    $(".weather-main").html(weatherjson.weather[0].main);
-    
-    var sunrise = (new Date(weatherjson.sys.sunrise * 1000)).toLocaleTimeString();
-    var sunset = (new Date(weatherjson.sys.sunset * 1000)).toLocaleTimeString();
-    $(".rise-set").html("<strong>Sunrise:</strong> " + sunrise + " | <strong>Sunset:</strong> " + sunset);
-    $(".weathericon").html('<img src="http://openweathermap.org/img/w/' + weatherjson.weather[0].icon + '.png" />');
-    $(".weathericon img").addClass("img-responsive");
-    $(".humidity").html(weatherjson.main.humidity + "%");
-    $(".gust").html(weatherjson.wind.gust + " m/s");
-    $(".pressure").html(weatherjson.main.pressure + " hPa");
-
-    var degToCard = function(deg) {
-      if (deg > 11.25 && deg < 33.75) {
-        return "NNE";
-      } else if (deg > 33.75 && deg < 56.25) {
-        return "ENE";
-      } else if (deg > 56.25 && deg < 78.75) {
-        return "E";
-      } else if (deg > 78.75 && deg < 101.25) {
-        return "ESE";
-      } else if (deg > 101.25 && deg < 123.75) {
-        return "ESE";
-      } else if (deg > 123.75 && deg < 146.25) {
-        return "SE";
-      } else if (deg > 146.25 && deg < 168.75) {
-        return "SSE";
-      } else if (deg > 168.75 && deg < 191.25) {
-        return "S";
-      } else if (deg > 191.25 && deg < 213.75) {
-        return "SSW";
-      } else if (deg > 213.75 && deg < 236.25) {
-        return "SW";
-      } else if (deg > 236.25 && deg < 258.75) {
-        return "WSW";
-      } else if (deg > 258.75 && deg < 281.25) {
-        return "W";
-      } else if (deg > 281.25 && deg < 303.75) {
-        return "WNW";
-      } else if (deg > 303.75 && deg < 326.25) {
-        return "NW";
-      } else if (deg > 326.25 && deg < 348.75) {
-        return "NNW";
-      } else {
-        return "N";
-      }
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(locationSuccess, getGeoIP);
+    } else {
+        getGeoIP();
     }
-
-    $(".wind-speed").html(weatherjson.wind.speed + " m/s " + degToCard(weatherjson.wind.deg));
-
-  })
-  dateTime();
 }
 
-function getTempC(temp, temp_max, temp_min) {
-  $(".temperature").html("<h1>" + Math.round(temp * 9 / 5 + 32) + "&deg;<span class=\"tempspanf\" onClick=\"getTempF(" + temp + ", " + temp_max + ", " + temp_min + ")\">F</span></h1><h2 class=\"max-min\">" + Math.round(temp_max * 9 / 5 + 32) + "&deg;F / " + Math.round(temp_min * 9 / 5 + 32) + "&deg;F</h2>");
+function getGeoIP() {
+    $.getJSON("http://freegeoip.net/json/", ipLocationSuccess);
 }
 
-function getTempF(temp, temp_max, temp_min) {
-  $(".temperature").html("<h1>" + Math.round(temp) + "&deg;<span class=\"tempspanc\" onClick=\"getTempC(" + temp + ", " + temp_max + ", " + temp_min + ")\">C</span></h1><h2 class=\"max-min\">" + Math.round(temp_max) + "&deg;C / " + Math.round(temp_min) + "&deg;C</h2>");
+function locationSuccess(pos) {
+    coords.lat = pos.coords.latitude;
+    coords.lon = pos.coords.longitude;
+    console.log(coords.lat, coords.lon);
+    getWeather(coords.lat, coords.lon);
+    getLocationName(coords.lat, coords.lon);
+}
+
+function ipLocationSuccess(ipjson) {
+    coords.lat = ipjson.latitude;
+    coords.lon = ipjson.longitude;
+    console.log(coords.lat, coords.lon);
+    getWeather(coords.lat, coords.lon);
+    getLocationName(coords.lat, coords.lon);
+}
+
+function getLocationName(lat, lon) {
+    $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&key=AIzaSyB_6EPRMJ2oCIW3hd_8CzduQZl0wbPyiEk", function(googlejson) {
+        console.log(googlejson.results.filter(v=>v.types.includes("locality"))[0].formatted_address);
+        $(".location").text(googlejson.results.filter(v=>v.types.includes("locality"))[0].formatted_address);
+    });
+}
+
+function getWeather(lat, lon) {
+    $.getJSON("https://crossorigin.me/https://api.darksky.net/forecast/e8df7b7df394e36ea8cefcecab0e8224/" + lat + ',' + lon + "?units=uk2", weatherSuccess);
+    dateTime();
+}
+
+function weatherSuccess(weatherjson) {
+    temp.C.main = Math.round(weatherjson.currently.temperature);
+    temp.C.max = Math.round(weatherjson.daily.data[0].temperatureMax);
+    temp.C.min = Math.round(weatherjson.daily.data[0].temperatureMin);
+    temp.F.main = Math.round(convertToF(weatherjson.currently.temperature));
+    temp.F.max = Math.round(convertToF(weatherjson.daily.data[0].temperatureMax));
+    temp.F.min = Math.round(convertToF(weatherjson.daily.data[0].temperatureMin));
+    updateTemp(presentUnit);
+    $(".weather-title").html(weatherjson.currently.summary);
+    var sunrise = (new Date(weatherjson.daily.data[0].sunriseTime * 1000)).toLocaleTimeString();
+    var sunset = (new Date(weatherjson.daily.data[0].sunsetTime * 1000)).toLocaleTimeString();
+    $(".rise-set").html("<strong>Sunrise:</strong> " + sunrise + " | <strong>Sunset:</strong> " + sunset);
+    renderIcons(weatherjson.currently.icon);
+    $(".humidity").text(weatherjson.currently.humidity + "%");
+    $(".pressure").text(weatherjson.currently.pressure + " hPa");
+    $(".visibility").text(weatherjson.currently.visibility + " miles");
+    $(".dew-point").html(weatherjson.currently.dewPoint + "&deg;C");
+    $(".wind-speed").html(weatherjson.currently.windSpeed + " mph " + degToCard(weatherjson.currently.windBearing));
+}
+    
+function convertToF(temp) {
+    return (temp*9)/5 + 32;
+}
+
+function degToCard(deg) {
+    if (deg > 11.25 && deg < 33.75) {
+      return "NNE";
+    } else if (deg > 33.75 && deg < 56.25) {
+      return "ENE";
+    } else if (deg > 56.25 && deg < 78.75) {
+      return "E";
+    } else if (deg > 78.75 && deg < 101.25) {
+      return "ESE";
+    } else if (deg > 101.25 && deg < 123.75) {
+      return "ESE";
+    } else if (deg > 123.75 && deg < 146.25) {
+      return "SE";
+    } else if (deg > 146.25 && deg < 168.75) {
+      return "SSE";
+    } else if (deg > 168.75 && deg < 191.25) {
+      return "S";
+    } else if (deg > 191.25 && deg < 213.75) {
+      return "SSW";
+    } else if (deg > 213.75 && deg < 236.25) {
+      return "SW";
+    } else if (deg > 236.25 && deg < 258.75) {
+      return "WSW";
+    } else if (deg > 258.75 && deg < 281.25) {
+      return "W";
+    } else if (deg > 281.25 && deg < 303.75) {
+      return "WNW";
+    } else if (deg > 303.75 && deg < 326.25) {
+      return "NW";
+    } else if (deg > 326.25 && deg < 348.75) {
+      return "NNW";
+    } else {
+      return "N";
+    }
+}
+
+function renderIcons(value) {
+    var skycons = new Skycons({"color": "white"});
+    skycons.add("icon", value);
+    skycons.play();
 }
 
 function dateTime() {
-  var x = document.lastModified;
-  $(".date-time").html("Last updated: " + x);
+    var x = document.lastModified;
+    $(".date-time").html("Last updated: " + x);
 }
+
+function updateTemp(unit) {
+    presentUnit = unit;
+    $(".temp-num").html(temp[presentUnit].main + "&deg;");
+    $(".cel-fah").html(presentUnit);
+    $(".max-min").html(temp[presentUnit].max + "&deg;" + presentUnit + " / " + temp[presentUnit].min + "&deg;" + presentUnit);
+}
+
+window.onload = function() {
+    getLocation();
+    dateTime();
+    $(".cel-fah").click(function() {
+        presentUnit == "C" ? updateTemp("F") : updateTemp("C");
+    });
+};
+
+
+
+

@@ -23,16 +23,17 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="weathericon">
+            <canvas id="icon" class="img-responsive" width="64px" height="64px"></canvas>
         </div>
       </div>
-      <div class="col-sm-6">
-        <div class="temperature">
-        </div>
+      <div class="col-sm-6 temperatures">
+        <h1 class="main-temp"><span class="temp-num"></span><span class="cel-fah"></span></h1>
+        <h2 class="max-min"></h2>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <h1 class="weather-main"></h1>
+        <h1 class="weather-title"></h1>
         <h4 class="rise-set"></h4>
       </div>
       <div class="col-sm-6">
@@ -46,17 +47,22 @@
             <td class="wind-speed"></td>
           </tr>
           <tr>
-            <td>Gust</td>
-            <td class="gust"></td>
+            <td>Visibility</td>
+            <td class="visibility"></td>
           </tr>
           <tr>
             <td>Pressure</td>
             <td class="pressure"></td>
+          </tr>
+          <tr>
+            <td>dewPoint</td>
+            <td class="dew-point"></td>
           </tr>
         </table>
       </div>
     </div>
     <h4 id="footer">Created by <a href="https://BhavikSheth.github.io" target="_blank">Bhavik Sheth</a></h4>
   </div>
+  <script type="text/javascript" src="js/skycons.js"></script>
 </body>
 </html>

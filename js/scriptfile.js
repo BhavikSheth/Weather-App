@@ -35,7 +35,7 @@ function getLocationName(lat, lon) {
 }
 
 function getWeather(lat, lon) {
-    $.getJSON("https://api.darksky.net/forecast/e8df7b7df394e36ea8cefcecab0e8224/" + lat + ',' + lon + "?units=uk2", weatherSuccess);
+    $.getJSON("https://api.darksky.net/forecast/e8df7b7df394e36ea8cefcecab0e8224/" + lat + ',' + lon + "?units=uk2&callback=?", weatherSuccess);
     dateTime();
 }
 

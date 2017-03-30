@@ -11,7 +11,7 @@ function getLocation() {
 }
 
 function getGeoIP() {
-    $.getJSON("http://freegeoip.net/json/", ipLocationSuccess);
+    $.getJSON("https://freegeoip.net/json/", ipLocationSuccess);
 }
 
 function locationSuccess(pos) {

@@ -1,3 +1,1 @@
-# JavaScript Calculator for FreeCodeCamp
-
-Basic Calculator
+# Weather Application for FreeCodeCamp

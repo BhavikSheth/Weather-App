@@ -18,7 +18,7 @@ body {
 
 .weathericon canvas {
   padding: 20px 0;
-  width: 250px;
+  width: 80%;
   margin: auto;
 }
 
@@ -37,7 +37,7 @@ body {
 
 .cel-fah {
   cursor: pointer;
-  color: red;
+  color: #F44336;
 }
 
 .max-min {
